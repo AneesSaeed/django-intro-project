@@ -1,0 +1,35 @@
+{% extends "_base.html" %}
+{% block title %} Détail - {{ developer.first_name }} {{ developer.last_name }} {% endblock title %}
+{% block content %}
+    <div class="mt-4 p-5 bg-white rounded">
+        <div class="d-flex align-items-center">
+            <h1>{{ developer.first_name }} {{ developer.last_name }} </h1>
+            <form action="{% url 'developer:delete' developer.id %}" method="POST" class="ms-3">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger btn-sm">
+                    <i class="fa fa-trash"></i>
+                </button>
+            </form>
+        </div>
+        <p>{{ developer.tasks.all|length }} tâche{{developer.tasks.all|length|pluralize}} assignée{{developer.tasks.all|length|pluralize}}.</p>
+    </div>
+    <div class="container-sm">
+        {% if not developer.is_free %}
+            <ul class="list-group">
+                {% for task in developer.tasks.all %}
+                <li class="list-group-item">
+                    <strong>{{ task.title }}</strong> {{ task.description }}
+                </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <div class="alert alert-danger">
+                Aucune tâche n'est assignée à {{ developer.first_name }}.
+            </div>
+        {% endif %}
+    </div>
+
+    <div class="container d-flex justify-content-center my-3">
+          {% include 'task/_create_task_modal.html'%}
+    </div>
+{% endblock content %}

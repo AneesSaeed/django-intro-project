@@ -1,0 +1,34 @@
+{% extends "_base.html" %}
+
+{% block content %}
+{% if user.is_authenticated %}
+    <div class="p-1 m-3 bg-light">
+        <h1>
+            {{ user.first_name }} {{ user.last_name }}
+        </h1>
+    </div>
+
+    <div class="container-sm">
+        {% if user.tasks.all|length %}
+            <ul class="list-group fluid">
+            {% for task in user.tasks.all %}
+                <li class="list-group-item">
+                    <strong>{{ task.title }}</strong>
+                    {{ task.description }}
+                </li>
+            {% endfor %}
+            </ul>
+        {% else %}
+            <alert class="alert alert-warning">No Tasks</alert>
+        {% endif %}
+    </div>
+{% else %}
+    <div class="text-center mt-5">
+        <h1 class="display-5 fw-bold">Bienvenue sur MProject</h1>
+        <p class="text-muted mb-4">Connectez-vous pour accéder à la gestion des tâches.</p>
+        <a href="{% url 'login' %}" class="btn btn-primary btn-lg">
+            <i class="fa fa-sign-in me-2"></i> Se connecter
+        </a>
+    </div>
+{% endif %}
+{% endblock content %}

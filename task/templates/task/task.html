@@ -1,0 +1,47 @@
+{% extends "_base.html" %}
+
+{% block title %} Liste des taches {% endblock title %}
+
+{% block content %}
+    {% if tasks %}
+        <div class="text-center mt-2">
+          <h2 class="text-primary p-2">Tâches du projet</h2>
+        </div>
+
+        <div class="container mt-5" style="width: 60%; line-height: 3rem;">
+            {% for t in tasks %}
+              <li class="list-group-item d-flex justify-content-between border-2 border-top pt-1  ">
+
+                <!-- title and desc -->
+                <div class="d-flex justify-content-around gap-3" style="line-height: 1.5rem;">
+                  <strong>{{ t.title }}</strong> — {{ t.description }}
+                </div>
+
+                <!-- assignee and remove button -->
+                <div class="d-flex align-items-center">
+                  {% if t.assignee %}
+                      <span class="badge bg-primary">{{ t.assignee }}</span>
+                  {% else %}
+                      <span class="badge bg-secondary">Non assignée</span>
+                  {% endif %}
+                  <form action="{% url 'task:delete' t.id %}" method="post" class="ms-2">
+                    {% csrf_token %}
+                    <button class="btn btn-danger btn-sm" type="submit">
+                      <i class="fa fa-trash"></i>
+                    </button>
+                  </form>
+                </div>
+
+              </li>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="container m-4">
+            <alert class="alert alert-warning">Il n'y a aucune tâche enregistré !</alert>
+        </div>
+    {% endif %}
+
+    <div class="container d-flex justify-content-center my-3">
+          {% include 'task/_create_task_modal.html' %}
+    </div>
+{% endblock content %}
